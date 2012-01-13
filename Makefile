@@ -2,19 +2,24 @@ LIBDIR=`erl -eval 'io:format("~s~n", [code:lib_dir()])' -s init stop -noshell`
 VERSION=0.2
 PKGNAME=erlmc
 
-all: emake
+.PHONY: deps
 
-emake: app
-	erl -make
-	
-app:
-	sh ebin/$(PKGNAME).app.in $(VERSION)
+all: deps compile
 
-test: all
-	prove t/*.t
+compile:
+	@./rebar compile
+
+debug:
+	@./rebar debug_info=1 compile
+
+deps:
+	@./rebar get-deps
 
 clean:
-	rm -rf erl_crash.dump ebin/*.beam ebin/*.app
+	@./rebar clean
+
+test:
+	@./rebar compile skip_deps=true eunit
 
 install:
 	mkdir -p $(prefix)/$(LIBDIR)/$(PKGNAME)-$(VERSION)/{ebin,include}

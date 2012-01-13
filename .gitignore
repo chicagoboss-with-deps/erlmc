@@ -1,4 +1,5 @@
-ebin/*.beam
-ebin/*.app
+erl_crash.dump
+ebin
+.eunit
 .*.swp
 .*.swo
