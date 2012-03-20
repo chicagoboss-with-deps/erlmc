@@ -31,10 +31,10 @@
          add_connection/2, remove_connection/2]).
 
 %% api callbacks
--export([get/1, get/2, get_many/1, add/2, add/3, set/2, set/3, 
-		 replace/2, replace/3, delete/1, increment/4, decrement/4,
-		 append/2, prepend/2, stats/0, stats/2, flush/0, flush/1, quit/0, 
-		 setq/2, setq/3, deleteq/1, replaceq/2, replaceq/3, incrementq/4, 
+-export([get/1, get/2, get_many/1, add/2, add/3, set/2, set/3,
+         replace/2, replace/3, delete/1, increment/4, decrement/4,
+         append/2, prepend/2, stats/0, stats/2, flush/0, flush/1, quit/0,
+         setq/2, setq/3, deleteq/1, replaceq/2, replaceq/3, incrementq/4,
      decrementq/4, version/0]).
 
 -include("erlmc.hrl").
@@ -127,7 +127,7 @@ setq(Key, Value) ->
     setq(Key, Value, 0).
 
 setq(Key0, Value, Expiration) when is_binary(Value), is_integer(Expiration) ->
-	Key = package_key(Key0),
+    Key = package_key(Key0),
     gen_server:cast(map_key(Key), {setq, Key, Value, Expiration}).
 
 replace(Key, Value) ->
@@ -138,10 +138,10 @@ replace(Key0, Value, Expiration) when is_binary(Value), is_integer(Expiration) -
     call(map_key(Key), {replace, Key, Value, Expiration}, ?TIMEOUT).
 
 replaceq(Key, Value) ->
-	replaceq(Key, Value, 0).
-	
+    replaceq(Key, Value, 0).
+
 replaceq(Key0, Value, Expiration) when is_binary(Value), is_integer(Expiration) ->
-	Key = package_key(Key0),
+    Key = package_key(Key0),
     gen_server:cast(map_key(Key), {replaceq, Key, Value, Expiration}).
 
 delete(Key0) ->
@@ -149,7 +149,7 @@ delete(Key0) ->
     call(map_key(Key), {delete, Key}, ?TIMEOUT).
 
 deleteq(Key0) ->
-	Key = package_key(Key0),
+    Key = package_key(Key0),
     gen_server:cast(map_key(Key), {deleteq, Key}).
 
 increment(Key0, Value, Initial, Expiration) when is_integer(Value), is_integer(Initial), is_integer(Expiration) ->
@@ -157,7 +157,7 @@ increment(Key0, Value, Initial, Expiration) when is_integer(Value), is_integer(I
     call(map_key(Key), {increment, Key, Value, Initial, Expiration}, ?TIMEOUT).
 
 incrementq(Key0, Value, Initial, Expiration) when is_integer(Value), is_integer(Initial), is_integer(Expiration) ->
-	Key = package_key(Key0),
+    Key = package_key(Key0),
     gen_server:cast(map_key(Key), {incrementq, Key, Value, Initial, Expiration}).
 
 decrement(Key0, Value, Initial, Expiration) when is_integer(Value), is_integer(Initial), is_integer(Expiration) ->
@@ -165,7 +165,7 @@ decrement(Key0, Value, Initial, Expiration) when is_integer(Value), is_integer(I
     call(map_key(Key), {decrement, Key, Value, Initial, Expiration}, ?TIMEOUT).
 
 decrementq(Key0, Value, Initial, Expiration) when is_integer(Value), is_integer(Initial), is_integer(Expiration) ->
-	Key = package_key(Key0),
+    Key = package_key(Key0),
     gen_server:cast(map_key(Key), {decrementq, Key, Value, Initial, Expiration}).
 
 append(Key0, Value) when is_binary(Value) ->
@@ -354,7 +354,7 @@ unique_connection(Host, Port) ->
       unique_connection(Host, Port, length(Pids))
   end.
 unique_connection(Host, Port, RandBase) ->
-  TRand = randomize(1, RandBase),
+  TRand = crypto:rand_uniform(1, RandBase + 1),
   case ets:select(erlmc_connections, [{{{Host, Port}, '$1'},[],['$$']}], TRand) of
     {[[Pid]|_],_} -> Pid;
     '$end_of_table' ->

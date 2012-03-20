@@ -252,7 +252,6 @@ encode_request(Request) when is_record(Request, request) ->
 
 recv_header(Socket, Timeout) ->
     decode_response_header(recv_bytes(Socket, 24, Timeout)).
-
 recv_body(Socket, #response{key_size = KeySize, extras_size = ExtrasSize, body_size = BodySize}=Resp) ->
     decode_response_body(recv_bytes(Socket, BodySize), ExtrasSize, KeySize, Resp).
 
